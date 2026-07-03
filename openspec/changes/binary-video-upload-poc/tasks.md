@@ -1,9 +1,9 @@
 ## 1. Environment Setup
 
-- [ ] 1.1 Initialize Django project (`django-admin startproject videopoc`)
+- [x] 1.1 Initialize Django project (`django-admin startproject videopoc`)
 - [ ] 1.2 Create Django app for API (`python manage.py startapp upload_api`)
 - [ ] 1.3 Configure Django settings (installed apps, DRF)
-- [ ] 1.4 Install dependencies (`django`, `djangorestframework`, `minio`, `python-dotenv`)
+- [x] 1.4 Install dependencies (`django`, `djangorestframework`, `minio`, `python-dotenv`)
 - [ ] 1.5 Configure MinIO credentials and endpoint in environment variables
 
 ## 2. MinIO Integration
