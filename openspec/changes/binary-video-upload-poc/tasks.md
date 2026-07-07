@@ -20,17 +20,13 @@
 
 ## 4. Backend Upload API
 
-- [ ] 4.1 Create URL routing for `/api/videos/upload/init` and `/api/videos/upload/confirm`
-- [ ] 4.2 Implement `init` APIView: Validate extension, create `VideoAsset(status=INIT)`, and return pre-signed URL
-- [ ] 4.3 Implement `confirm` APIView: Validate upload with MinIO stat_object, update `VideoAsset(status=UPLOADED)`, and return success JSON
+- [x] 4.1 Create URL routing for `/api/videos/upload/init` and `/api/videos/upload/confirm`
+- [x] 4.2 Implement `init` APIView: Validate extension, create `VideoAsset(status=INIT)`, and return pre-signed URL
+- [x] 4.3 Implement `confirm` APIView: Validate upload with MinIO stat_object, update `VideoAsset(status=UPLOADED)`, and return success JSON
 
-## 5. Frontend Client
+## 5. Testing (Python Script)
 
-- [ ] 5.1 Create HTML template with a file picker and upload button
-- [ ] 5.2 Write JavaScript to fetch pre-signed URL from `/init` endpoint
-- [ ] 5.3 Write JavaScript to perform `XMLHttpRequest` PUT directly to the MinIO URL with progress bar
-- [ ] 5.4 Write JavaScript to call `/confirm` endpoint after successful PUT request
-- [ ] 5.5 Display success response JSON or error message on completion
+- [ ] 5.1 Write `test_upload.py` to call `/init` endpoint, extract upload URL, perform `PUT` to MinIO, and call `/confirm`
 
 ## 6. Documentation & Polish
 
