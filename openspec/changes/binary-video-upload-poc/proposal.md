@@ -1,12 +1,13 @@
 ## Why
 
-To understand how direct binary uploads work and how a service like TPStreams could expose a Server API for video uploads. The goal is to demonstrate how a backend API can accept a video file uploaded directly from a client via `multipart/form-data` and store it in a local MinIO object storage using an asset UUID.
+To understand how direct binary uploads work and how a service like TPStreams could expose a Server API for video uploads. The goal is to demonstrate a **direct-to-object-storage architecture** where a backend API generates a pre-signed URL, and the client uploads the video directly to MinIO, bypassing the backend server completely.
 
 ## What Changes
 
 - Create a simple backend application using Django and Django REST Framework (Python).
-- Create a `POST /api/videos/upload` endpoint that accepts video files via `multipart/form-data`.
-- Integrate MinIO Python SDK to save uploaded files directly to MinIO using paths like `videos/{asset_uuid}/{original_filename}`.
+- Create a `POST /api/videos/upload/init` endpoint that generates an `asset_uuid` and returns a MinIO pre-signed PUT URL.
+- Create a `POST /api/videos/upload/confirm` endpoint to verify the upload was successful.
+- Integrate MinIO Python SDK to generate pre-signed URLs and verify object existence.
 - Implement validation for file types (`.mp4`, `.mov`, `.mkv`, `.webm`).
 - Return a JSON response with upload details.
 - Create a simple HTML client with a file picker, upload button, progress bar, and success/error message.
