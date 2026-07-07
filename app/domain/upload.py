@@ -1,5 +1,5 @@
 import os
-from app.models.video import VideoAsset
+from app.models.video import VideoAsset, Status
 from app.utils.minio_utils import generate_presigned_upload_url, check_object_exists
 
 class VideoUploadService:
@@ -27,7 +27,7 @@ class VideoUploadService:
         try:
             upload_url = generate_presigned_upload_url(object_name)
         except Exception as e:
-            asset.status = VideoAsset.Status.FAILED
+            asset.status = Status.FAILED
             asset.save()
             raise Exception("Failed to generate upload URL") from e
             
@@ -38,20 +38,50 @@ class VideoUploadService:
         }
 
     @classmethod
-    def confirm_upload(cls, asset: VideoAsset) -> dict:
-        object_name = cls.get_object_name(asset)
-        stat_info = check_object_exists(object_name)
+    def handle_webhook(cls, payload: dict) -> dict:
+        records = payload.get('Records', [])
+        if not records:
+            raise ValueError("No records in webhook payload")
             
-        if not stat_info.get('exists'):
-            raise FileNotFoundError("File not found in MinIO")
+        record = records[0]
+        event_name = record.get('eventName', '')
+        
+        if not event_name.startswith('s3:ObjectCreated:'):
+            # We only care about creation events
+            return {"status": "ignored", "reason": f"Event {event_name} is not a creation event"}
             
-        asset.status = VideoAsset.Status.UPLOADED
-        asset.size = stat_info.get('size')
+        s3_data = record.get('s3', {})
+        obj_data = s3_data.get('object', {})
+        
+        object_key = obj_data.get('key')
+        size = obj_data.get('size')
+        
+        import urllib.parse
+        
+        if not object_key:
+            raise ValueError("Missing object key in payload")
+            
+        object_key = urllib.parse.unquote(object_key)
+            
+        # Extract UUID from "videos/<uuid>.ext"
+        # Example: "videos/123e4567-e89b-12d3-a456-426614174000.mp4"
+        try:
+            filename = object_key.split('/')[-1]
+            asset_uuid = filename.split('.')[0]
+        except IndexError:
+            raise ValueError(f"Malformed object key: {object_key}")
+            
+        try:
+            asset = VideoAsset.objects.get(id=asset_uuid)
+        except VideoAsset.DoesNotExist:
+            raise FileNotFoundError(f"VideoAsset with id {asset_uuid} not found")
+            
+        asset.status = Status.UPLOADED
+        asset.size = size
         asset.save()
         
         return {
-            "message": "Upload confirmed",
+            "status": "processed",
             "asset_uuid": str(asset.id),
-            "size": asset.size,
-            "status": asset.get_status_display()
+            "size": asset.size
         }

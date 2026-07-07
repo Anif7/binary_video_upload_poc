@@ -6,8 +6,8 @@ To understand how direct binary uploads work and how a service like TPStreams co
 
 - Create a simple backend application using Django and Django REST Framework (Python).
 - Create a `POST /api/videos/upload/init` endpoint that generates an `asset_uuid` and returns a MinIO pre-signed PUT URL.
-- Create a `POST /api/videos/upload/confirm` endpoint to verify the upload was successful.
-- Integrate MinIO Python SDK to generate pre-signed URLs and verify object existence.
+- Create a `POST /api/videos/webhook/minio` endpoint to receive bucket notifications from MinIO when an upload completes.
+- Integrate MinIO Python SDK to generate pre-signed URLs.
 - Implement validation for file types (`.mp4`, `.mov`, `.mkv`, `.webm`).
 - Return a JSON response with upload details.
 - Create a simple HTML client with a file picker, upload button, progress bar, and success/error message.

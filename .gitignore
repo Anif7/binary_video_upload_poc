@@ -41,3 +41,4 @@ venv.bak/
 
 # Virtualenvwrapper (just in case)
 .virtualenvs/
+test_video.mp4

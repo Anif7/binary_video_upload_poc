@@ -22,11 +22,12 @@
 
 - [x] 4.1 Create URL routing for `/api/videos/upload/init` and `/api/videos/upload/confirm`
 - [x] 4.2 Implement `init` APIView: Validate extension, create `VideoAsset(status=INIT)`, and return pre-signed URL
-- [x] 4.3 Implement `confirm` APIView: Validate upload with MinIO stat_object, update `VideoAsset(status=UPLOADED)`, and return success JSON
+- [x] 4.3 Implement `webhook` APIView: Parse MinIO `s3:ObjectCreated:*` event and update `VideoAsset(status=UPLOADED)`
+- [x] 4.4 Configure MinIO Bucket Notifications to send webhooks to `/api/videos/webhook/minio`
 
 ## 5. Testing (Python Script)
 
-- [ ] 5.1 Write `test_upload.py` to call `/init` endpoint, extract upload URL, perform `PUT` to MinIO, and call `/confirm`
+- [x] 5.1 Write `test_upload.py` to call `/init` endpoint, perform `PUT` to MinIO, and verify database updates via webhook
 
 ## 6. Documentation & Polish
 

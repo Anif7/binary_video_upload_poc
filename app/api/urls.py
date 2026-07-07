@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import VideoUploadInitView, VideoUploadConfirmView
+from .views import VideoUploadInitView, MinIOWebhookView
 
 urlpatterns = [
     path('videos/upload/init', VideoUploadInitView.as_view(), name='video-upload-init'),
-    path('videos/upload/confirm', VideoUploadConfirmView.as_view(), name='video-upload-confirm'),
+    path('videos/webhook/minio', MinIOWebhookView.as_view(), name='video-upload-webhook'),
 ]

@@ -1,23 +1,26 @@
 ## ADDED Requirements
 
-### Requirement: Accept multipart/form-data video uploads
-The system SHALL provide a `POST /api/videos/upload` endpoint that accepts video files via `multipart/form-data`.
+### Requirement: Initialize Upload
+The system SHALL provide a `POST /api/videos/upload/init` endpoint that generates a pre-signed URL for direct client upload to MinIO.
 
-#### Scenario: Valid video upload
-- **WHEN** client sends a valid `.mp4` file
-- **THEN** system processes the upload successfully
+#### Scenario: Valid initialization
+- **WHEN** client sends a request with a valid `.mp4` filename and content type
+- **THEN** system generates an `asset_uuid`, creates a `VideoAsset` with status `INIT`, and returns a JSON response containing `asset_uuid` and the `upload_url` (pre-signed PUT URL)
 
-### Requirement: Validate video formats
-The system SHALL reject file uploads that are not `.mp4`, `.mov`, `.mkv`, or `.webm`.
+### Requirement: Validate video formats during initialization
+The system SHALL reject initialization requests for file extensions that are not `.mp4`, `.mov`, `.mkv`, or `.webm`.
 
 #### Scenario: Invalid file format
-- **WHEN** client sends a `.pdf` file
+- **WHEN** client attempts to initialize upload for a `.pdf` file
 - **THEN** system returns a 400 Bad Request with an error message indicating unsupported format
 
+### Requirement: Webhook Confirmation
+The system SHALL provide a `POST /api/videos/webhook/minio` endpoint that receives bucket notifications directly from MinIO when an object is uploaded.
 
-### Requirement: Store in MinIO
-The system SHALL upload accepted video files to a MinIO bucket under the path `videos/{asset_uuid}/{original_filename}`.
+#### Scenario: Successful upload notification
+- **WHEN** MinIO successfully receives a file and triggers a webhook with `s3:ObjectCreated:*`
+- **THEN** system parses the payload to extract the `object_name`, finds the corresponding `VideoAsset`, updates its size, and marks its status as `UPLOADED`.
 
-#### Scenario: Successful MinIO upload
-- **WHEN** a valid video is received
-- **THEN** system generates a unique `asset_uuid`, uploads to MinIO, and returns a JSON response containing `success`, `video_id`, `asset_uuid`, `object_path`, `original_filename`, `size`, and `mime_type`
+#### Scenario: Invalid webhook
+- **WHEN** MinIO (or a malicious client) sends a webhook payload that cannot be parsed
+- **THEN** system returns a 400 Bad Request error.

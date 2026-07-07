@@ -5,10 +5,10 @@ We are building a Proof of Concept (POC) to demonstrate a **direct-to-object-sto
 ## Goals / Non-Goals
 
 **Goals:**
-- Implement a Django backend with `/api/videos/upload/init` and `/api/videos/upload/confirm` endpoints.
+- Implement a Django backend with `/api/videos/upload/init` and `/api/videos/webhook/minio` endpoints.
 - Generate MinIO pre-signed PUT URLs for direct client uploads.
 - Validate video file formats during initialization.
-- Provide a mechanism to confirm the file exists in MinIO after client upload.
+- Use MinIO Bucket Notifications (Webhooks) to automatically confirm uploads when the object is created.
 - Return structured JSON response with `asset_uuid`.
 - Build a simple HTML/JS frontend to demonstrate the upload process with a progress bar.
 - Provide curl and fetch examples.
