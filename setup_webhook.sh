@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# Configuration
+# Auto-detect the machine's local IP address (works on Linux/WSL/macOS)
+HOST_IP=$(hostname -I | awk '{print $1}')
+# If for some reason it fails, fallback to a provided argument or localhost
+HOST_IP=${HOST_IP:-127.0.0.1}
+
 MINIO_ALIAS="myminio"
-WEBHOOK_ENDPOINT="http://172.17.38.12:8000/api/videos/webhook/minio"
+WEBHOOK_ENDPOINT="http://${HOST_IP}:8000/api/videos/webhook/minio"
 BUCKET_NAME="streams"
 
 echo "=========================================="
