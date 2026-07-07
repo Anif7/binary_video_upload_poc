@@ -13,22 +13,27 @@
 - [x] 2.3 Create utility function to verify if an object exists in MinIO (stat_object)
 - [x] 2.4 Configure MinIO bucket CORS policy to allow uploads from the frontend
 
-## 3. Backend Upload API
+## 3. Database Models
 
-- [ ] 3.1 Create URL routing for `/api/videos/upload/init` and `/api/videos/upload/confirm`
-- [ ] 3.2 Implement `init` APIView: Validate file extension, generate `asset_uuid`, and return pre-signed URL
-- [ ] 3.3 Implement `confirm` APIView: Validate upload with MinIO stat_object and return success JSON
+- [x] 3.1 Create `VideoAsset` model with `id` (UUID), `original_filename`, `status`, and `size`
+- [x] 3.2 Create and run database migrations
 
-## 4. Frontend Client
+## 4. Backend Upload API
 
-- [ ] 4.1 Create HTML template with a file picker and upload button
-- [ ] 4.2 Write JavaScript to fetch pre-signed URL from `/init` endpoint
-- [ ] 4.3 Write JavaScript to perform `XMLHttpRequest` PUT directly to the MinIO URL with progress bar
-- [ ] 4.4 Write JavaScript to call `/confirm` endpoint after successful PUT request
-- [ ] 4.5 Display success response JSON or error message on completion
+- [ ] 4.1 Create URL routing for `/api/videos/upload/init` and `/api/videos/upload/confirm`
+- [ ] 4.2 Implement `init` APIView: Validate extension, create `VideoAsset(status=INIT)`, and return pre-signed URL
+- [ ] 4.3 Implement `confirm` APIView: Validate upload with MinIO stat_object, update `VideoAsset(status=UPLOADED)`, and return success JSON
 
-## 5. Documentation & Polish
+## 5. Frontend Client
 
-- [ ] 5.1 Create `README.md` explaining the direct-to-object-storage upload flow (with diagram)
-- [ ] 5.2 Add API testing examples (curl, fetch) to `README.md`
-- [ ] 5.3 Ensure code is well-commented and clean
+- [ ] 5.1 Create HTML template with a file picker and upload button
+- [ ] 5.2 Write JavaScript to fetch pre-signed URL from `/init` endpoint
+- [ ] 5.3 Write JavaScript to perform `XMLHttpRequest` PUT directly to the MinIO URL with progress bar
+- [ ] 5.4 Write JavaScript to call `/confirm` endpoint after successful PUT request
+- [ ] 5.5 Display success response JSON or error message on completion
+
+## 6. Documentation & Polish
+
+- [ ] 6.1 Create `README.md` explaining the direct-to-object-storage upload flow (with diagram)
+- [ ] 6.2 Add API testing examples (curl, fetch) to `README.md`
+- [ ] 6.3 Ensure code is well-commented and clean
